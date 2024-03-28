@@ -1,0 +1,25 @@
+public class Main {
+  public static void main(String[] args) {
+    System.out.println("hello"); //표준출력
+    System.out.println("hello2");
+    int x=5;  //대입연산자 좌측에 있을때만 변수다
+    int y=10;
+    System.out.println(x+5); // 여기서의 x는 변수가 아니다
+    x=2;
+    System.out.println(x+5);
+    System.out.println("x");
+    System.out.println(x);
+    System.out.println("123"+"456");
+    System.out.println("x: " + 10 ); // 숫자가 문장으로 바뀐다
+    System.out.println("x: " + 10 + 5);
+    System.out.println("x: " + (10 + 5));
+    System.out.println("x: "+ (x+y));
+    System.out.println("x: "+ x+y);
+    x=10;
+    y=5;
+
+    System.out.println("x: " + x);
+    System.out.println("y: " + y);
+  }
+}
+
