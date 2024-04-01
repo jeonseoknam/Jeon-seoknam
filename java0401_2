@@ -1,0 +1,26 @@
+import java.util.Scanner;
+
+public class Main{
+    public static void main(String[] args)
+    {
+
+        System.out.println("1~99 사이의 정수를 입력하시오>>");
+        Scanner scanner = new Scanner(System.in);
+
+        int a = scanner.nextInt();
+        int first = a/10;
+        int second = a%10;
+
+
+
+        if( first%3 + second%3 == 0)
+            System.out.println("박수짝짝");
+        else if( first % 3 == 0)
+            System.out.println("박수짝");
+        else if( second % 3 == 0)
+            System.out.println("박수짝");
+
+        }
+    }  //자바 교재 111p 6번
+
+
