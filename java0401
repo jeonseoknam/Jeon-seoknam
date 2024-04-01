@@ -1,0 +1,18 @@
+import java.util.Scanner;
+
+public class Main{
+    public static void main(String[] args)
+    {
+        System.out.println("2자리수 정수 입력(10~99)>>");
+        Scanner scanner = new Scanner(System.in);
+
+        int a = scanner.nextInt(); //정수를 자릿수별로 나누는 법? 86/10 = 8 -> 십의자리, 86%10=6 -> 일의자리
+        int first = a/10;
+        int second = a%10;
+
+        if(first == second) {
+            System.out.println("Yes! 10의 자리와 1의 자리가 같습니다. ");
+        }
+    }
+
+} // 자바 책 110p 2번(과제)
