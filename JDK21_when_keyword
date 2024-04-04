@@ -1,0 +1,17 @@
+import java.util.Scanner;
+public class Main {
+  public static void main(String[] args) {
+
+    Scanner sc = new Scanner(System.in);
+
+    Integer score = sc.nextInt();
+    String s = switch(score)
+    {
+      case 100 -> "Perfect!";
+      case Integer i when i >= 90 -> "Very Good!";
+      case Integer i when i >= 80 -> "Good!";
+      default -> "Bad";
+    };
+    System.out.println(s);
+  }
+}
