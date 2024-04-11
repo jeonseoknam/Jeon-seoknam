@@ -1,0 +1,395 @@
+package edu.colorado.collections;
+public class DoubleArraySeq {
+
+  //Invariant of the DoubleArraySeq class:
+  // 1. The number of elements in the sequence is stored in the instance variable manyItems.
+  // 2. For an empty sequence (with no elements), we do not care what is stored
+  // in any of data; for a nonempty sequence, the elements of the sequence
+  // are stored from the front to the end in data[0] to data[manyItems-1],
+  // and we don’t care what is stored in the rest of data.
+  // 3.If there is a current element, then it lies in data[currentIndex]; if there
+  //is no current element, then currentIndex equals manyItems.
+
+  private double[] Array; //double타입의 배열을 저장하기 위한 변수
+
+  /**
+   * 현재의 인덱스를 저장하는 변수.
+   * 초기값은 -1로, 아직 선택된 인덱스가 없음을 의미합니다.
+   **/
+  private int CurrentElement = -1;
+  private int manyItems = 0;   //배열의 크기를 나타내는 변수
+
+
+/**기본 constructor로, 크기가 10인 double형 배열을 생성합니다.
+ * @ postcondition
+ * This sequence is empty and has an initial capacity of 10.
+ * @ param - none
+ * @ exception OutOfMemoryError
+ * Indicates insufficient memory for: new double[10].
+ **/
+  public DoubleArraySeq() {
+
+    Array = new double[10];
+  }
+
+  /** 초기 용량(크기)를 인자로 받는 constructor.
+   * 배열의 크기가 음수이면 예외를 발생시킵니다.
+   * @ precondition
+   * initialCapacity is non-negative.
+   * @ postcondition
+   * This sequence is empty and has the given initial capacity.
+   * @ param - initialCapacity
+   * the initial capacity of this sequence
+   * @ exception IllegalArgumentException
+   * Indicates that initialCapacity is negative.
+   * @ exception OutOfMemoryError
+   * Indicates insufficient memory for: new double[initialCapacity].
+   **/
+  public DoubleArraySeq(int initialCapacity) {
+    if (initialCapacity < 0)
+      throw new IllegalArgumentException("initialCapacity가 음수입니다.");
+    Array = new double[initialCapacity];
+  }
+
+  /**현재 인덱스 이후의 원소를 추가해주는 method
+   * 만약 배열 용량(크기)이 새 원소 추가로 인해 늘어나야 된다면,
+   * 배열의 크기가 증가한다.
+   * @ postcondition
+   * A new copy of the element has been added to this sequence.
+   * If there was a current element,
+   * then the new element is placed after the current element.
+   * If there was no current element,
+   * then the new element is placed at the end of the sequence.
+   * In all cases,
+   * the new element becomes the new current element of this sequence.
+   * @ param - the new element that is being added
+   * @ exception OutOfMemoryError
+   * Indicates insufficient memory for increasing the sequence's capacity.
+   **/
+  public void addAfter(double element) {
+    if (manyItems == getCapacity())  //manyItems == 현재 배열의 용량
+      ensureCapacity(manyItems * 2 + 1); //배열 크기 증가
+    if (manyItems == 0) {   //배열의 길이 = 0
+      Array[0] = element;   //새 원소 생성 후 공간 생성
+      CurrentElement = 0;
+      manyItems++;
+      return;
+    }
+
+    double[] Array_new = new double[getCapacity()];
+    System.arraycopy(Array, 0, Array_new, 0, manyItems);
+
+    System.arraycopy(Array_new, 0, Array, 0, CurrentElement);
+    Array[CurrentElement + 1] = element; //새로운 원소 추가
+    System.arraycopy(Array_new, CurrentElement + 1, Array, CurrentElement + 2, manyItems - CurrentElement);
+
+    manyItems++; //배열의 길이 +1
+    if (CurrentElement < manyItems - 1) //current를 추가된 원소 뒤의 원소로 한다(1칸 전진 느낌)
+      CurrentElement++;
+
+  }
+  /**현재 인덱스 이전의 원소를 추가해주는 method
+   * 만약 배열 용량(크기)이 새 원소 추가로 인해 늘어나야 된다면,
+   * 배열의 크기가 증가한다.
+   * @ postcondition
+   * A new copy of the element has been added to this sequence.
+   * If there was a current element,
+   * then the new element is placed before the current element.
+   * If there was no current element,
+   * then the new element is placed at the start of the sequence.
+   * In all cases,
+   * the new element becomes the new current element of this sequence.
+   * @ param - the new element that is being added
+   * @ exception OutOfMemoryError
+   * Indicates insufficient memory for increasing the sequence's capacity.
+   **/
+  public void addBefore(double element) {
+    if (manyItems == getCapacity())
+      ensureCapacity(manyItems * 2 + 1);
+    if (manyItems == 0) {
+      Array[0] = element;
+      CurrentElement = 0;
+      manyItems++;
+      return;
+    }
+
+    double[] Array_new = new double[getCapacity()];
+    System.arraycopy(Array, 0, Array_new, 0, manyItems);
+
+    System.arraycopy(Array_new, 0, Array, 0, CurrentElement);
+    Array[CurrentElement] = element;
+    System.arraycopy(Array_new, CurrentElement, Array, CurrentElement + 1, manyItems - CurrentElement);
+
+    manyItems++;
+    if (0 < CurrentElement) //뒤에 추가된 원소의 한 칸 뒤를 current로 만든다.
+      CurrentElement--;
+  }
+
+  /** 다른 배열의 모든 원소를 현재 배열의 끝에 붙이는(추가하는) method
+   * @ precondition
+   * The parameter, addend, is not null.
+   * @ postcondition
+   * The elements from addend have been placed at the end of this sequence.
+   * The current element of this sequence remains where it was,
+   * and the addend is also unchanged.
+   * @ param - addend
+   * a sequence whose contents will be placed at the end of this sequence
+   * @ exception OutOfMemoryError
+   * Indicates insufficient memory for increasing the sequence's capacity.
+   * @ exception NullPointerException
+   * indicates that addend is null
+   **/
+  public void addAll(DoubleArraySeq add_end) {
+    ensureCapacity(manyItems + add_end.manyItems);
+
+    System.arraycopy(add_end.Array, 0, this.Array, manyItems, add_end.manyItems);
+    manyItems += add_end.manyItems;
+
+  }
+
+  /** current element를 배열의 다음 인덱스로 이동시키는 method입니다.
+   * @ precondition
+   * isCurrent() returns true.
+   * @ postcondition
+   * If the current element was already the end element of this sequence (with nothing after it),
+   * then there is no longer any current element.
+   * Otherwise, the new element is the element immediately after the original current element.
+   * @ param - none
+   * @ exception IllegalStateException
+   *  Indicates that there is no current element, so advance may not be called.
+   **/
+  public void advance() {
+    if (isCurrent())
+      CurrentElement++;
+  }
+
+  /** 배열 객체의 복사본을 생성해주는 method
+   * @ Overrides
+   * clone in class java.lang.Object
+   * @ Returns
+   * The return value is a copy of this sequence.
+   * Subsequent changes to the copy will not affect the original, nor vice versa.
+   * @ param - none
+   * @ exception OutOfMemoryError
+   * Indicates insufficient memory for creating the clone.
+   **/
+  public DoubleArraySeq clone() {
+    DoubleArraySeq respond;
+
+    try {
+      respond = (DoubleArraySeq) super.clone();
+    } catch (CloneNotSupportedException e) {
+      throw new RuntimeException
+          ("이 클래스는 클론을 구현할 수 없습니다.");
+    }
+    return respond;
+  }
+
+
+  /** 서로 다른 두 배열을 더한 새로운 배열을 만드는 method
+   * @ precondition
+   * Neither s1 nor s2 is null.
+   * @ param - s1, s2
+   * s1 - the fist of two sequences
+   * s2 - the second of two sequences
+   * @ returns
+   * a new sequence that has the elements of
+   * s1 followed by the elements of s2 (with no current element)
+   * @ exception NullPointerException
+   *  Indicates that one of the arguments is null.
+   * @ exception OutOfMemoryError
+   * Indicates insufficient memory for the new sequence.
+   **/
+
+  public static DoubleArraySeq catenation(DoubleArraySeq array1, DoubleArraySeq array2) {
+    DoubleArraySeq Array_new = new DoubleArraySeq(array1.getCapacity() + array2.getCapacity());
+
+    if (array1 != null && array2 != null) {
+      System.arraycopy(array1.Array, 0, Array_new.Array, 0, array1.manyItems);
+      System.arraycopy(array2.Array, 0, Array_new.Array, array1.manyItems, array2.manyItems);
+      Array_new.manyItems = array1.manyItems + array2.manyItems;
+      Array_new.start();
+    }
+
+
+    return Array_new;
+  }
+
+  /** 배열의 최소 용량(크기)을 보장하는 method
+   * 필요하면 배열의 용량(크기)을 늘린다.
+   * @ precondition
+   * The parameter, addend, is not null.
+   * @ postcondition
+   * This sequence's capacity has been changed to at least minimumCapacity.
+   * If the capacity was already at or greater than minimumCapacity,
+   * then the capacity is left unchanged.
+   * @ param - minimumCapacity
+   * the new capacity for this sequence
+   * @ exception OutOfMemoryError
+   * Indicates insufficient memory for: new int[minimumCapacity].
+   **/
+  public void ensureCapacity(int minimumCapacity) {
+    double Array_now[];
+
+    if (Array.length < minimumCapacity) {
+      Array_now = new double[minimumCapacity];
+      System.arraycopy(Array, 0, Array_now, 0, manyItems);
+      Array = Array_now;
+    }
+  }
+
+  /** 현재 배열의 용량(크기)을 return하는 Accessor method입니다.
+   * @ param - none
+   * @ returns - the current capacity of this sequence
+   **/
+  public int getCapacity() {
+    return Array.length;
+  }
+
+  /** 해당 배열의 현재 원소의 값을 반환하는 Accessor method입니다.
+   * 현재 요소가 없다면 0을 반환합니다.
+   * @ precondition
+   * isCurrent() returns true.
+   * @ returns
+   * the current element of this sequence
+   * @ exception IllegalStateException
+   *  Indicates that there is no current element, so getCurrent may not be called.
+   **/
+  public double getCurrent() {
+    if (isCurrent())
+      return Array[CurrentElement];
+    else
+      return 0;
+  }
+
+  /** 해당 배열에서 지정된 현재 원소가 있는지 알려주는 Accessor method입니다.
+   * @ returns
+   * true(there is a current element) or
+   * false(there is no current element at the moment)
+   * @ exception IllegalStateException
+   *  Indicates that there is no current element, so getCurrent may not be called.
+   **/
+  public boolean isCurrent() {
+    if (CurrentElement < manyItems)
+      return true;
+    else
+      return false;
+  }
+
+  /** 해당 배열에서 지정된 현재 원소를 제거해주는 method이다
+   * @ precondition
+   * isCurrent() returns true.
+   * @ postcondition
+   * The current element has been removed from this sequence,
+   * and the following element (if there is one) is now the new current element.
+   * If there was no following element, then there is now no current element.
+   * @ exception IllegalStateException
+   * Indicates that there is no current element, so removeCurrent may not be called.
+   **/
+  public void removeCurrent() {
+    if (isCurrent()) {
+      double[] Array_new = new double[getCapacity()];
+
+      System.arraycopy(Array, 0, Array_new, 0, manyItems);
+
+      System.arraycopy(Array_new, 0, Array, 0, CurrentElement - 1);
+      System.arraycopy(Array_new, CurrentElement + 1, Array, CurrentElement, manyItems - CurrentElement);
+
+      manyItems--;
+      if (manyItems <= CurrentElement)
+        CurrentElement = manyItems - 1;
+    }
+  }
+
+  /** 해당 배열의 원소의 수를 결정하는 method
+   * returns - manyItems
+   * the number of elements in this sequence
+   **/
+  public int size() {
+    return manyItems;
+  }
+
+
+  /** 해당 배열의 맨 앞을 현재 원소로 설정하는 method(순회 시작)
+   * @ postcondition
+   * The front element of this sequence is now the current element
+   * (but if this sequence has no elements at all, then there is no current element).
+   **/
+  public void start() {
+    if (0 < size())
+      CurrentElement = 0;
+  }
+
+  /** 해당 배열의 크기를 실제 원소 수에 맞게 조정하는 method
+   * @ postcondition
+   * This sequence's capacity has been changed to its current size.
+   * exception - OutOfMemoryError
+   * Indicates insufficient memory for altering the capacity.
+   **/
+  public void trimToSize() {
+    double[] Array_new = new double[this.size()];
+    System.arraycopy(Array, 0, Array_new, 0, manyItems);
+    Array = Array_new;
+  }
+
+  public static void main(String[] args) {
+    DoubleArraySeq sequence = new DoubleArraySeq(11); //크기가 11인 배열 객체 생성
+    for(double i = 10.1; i<20; i++) //10.1~19.1 10개
+    {
+      sequence.addAfter(i);
+    }
+      sequence.addBefore(20.4);  //current element가 19.1이였는데, 그 이전에 20.4 삽입. current가 18.1이 된다
+      sequence.addAfter(99.9); //18.1 뒤에 99.9 삽입.
+
+    for (sequence.start( ); sequence.isCurrent( ); sequence.advance( )) // 배열의 처음부터; 끝까지; 인덱스 +1
+      System.out.println(sequence.getCurrent());
+
+    System.out.println("끝");
+
+
+
+    DoubleArraySeq sequence2 = new DoubleArraySeq(11);
+    sequence2.addAfter(44.4);
+    sequence2.addAfter(55.5);
+    sequence2.addAfter(66.6);
+    sequence2.addAfter(77.7);
+    sequence.addAll(sequence2);
+
+
+    int size = sequence.size();
+    System.out.println(size);  // 원래 12개 + 새로 추가된 4개
+
+
+    for (sequence.start( ); sequence.isCurrent( ); sequence.advance( )) // 배열의 처음부터; 끝까지; 인덱스 +1
+      System.out.println(sequence.getCurrent( ));
+
+
+
+    DoubleArraySeq king_sequence = new DoubleArraySeq(15);
+    king_sequence = sequence.catenation(sequence, sequence2);
+    king_sequence.addBefore(42.1);
+    king_sequence.ensureCapacity(11);
+    int size_king = king_sequence.size();  //16+4+1 = 21
+    System.out.println(size_king);
+    for (king_sequence.start( ); king_sequence.isCurrent( ); king_sequence.advance( )) // 배열의 처음부터; 끝까지; 인덱스 +1
+      System.out.println(king_sequence.getCurrent( ));
+
+    sequence2.ensureCapacity(15);
+    int show_size = sequence2.getCapacity();
+    double current_value = sequence2.getCurrent();
+    System.out.println(current_value);
+    System.out.println(show_size);
+
+    boolean is_current = sequence2.isCurrent();
+    System.out.println(is_current);
+
+    sequence2.removeCurrent();
+    for(sequence2.start(); sequence2.isCurrent(); sequence2.advance())
+      System.out.println(sequence2.getCurrent());
+    System.out.println(show_size);
+    sequence2.trimToSize();
+    int show_true = sequence2.getCapacity();
+    System.out.println(show_true);
+
+  }
+}
