@@ -1,0 +1,36 @@
+public class Throttle {
+  public int top;
+  public int position;
+
+  public Throttle(int size)
+  {
+    if(size<=0)
+      throw new IllegalArgumentException("size<=0: "+size);
+    top = size;
+    position = 0;
+  }
+
+  public int position()
+  {
+    return position;
+  }
+  public double getFlow()
+  {
+    return (double)position/(double)top;
+  }
+
+  public void shutoff()
+  {
+    position = 0;
+  }
+
+  public void shift(int amount)
+  {
+    if(amount+position>top)
+      position = top;
+    else if(position+amount<0)
+      position = 0;
+    else
+      position += amount;
+  }
+}
