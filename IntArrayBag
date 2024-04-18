@@ -1,0 +1,118 @@
+public class IntArrayBag implements Cloneable{
+  private int[] data;
+  private int manyItems;
+
+  public IntArrayBag() {
+    final int INITIAL_CAPACITY = 10;
+    manyItems = 0;
+    data = new int[INITIAL_CAPACITY];
+  }
+    public IntArrayBag(int initialCapacity)  //생성자는 반환형이 없다. 반환값이 없기 때문. 생성자의 이름은 클래스 이름과 같다.
+    {
+      if(initialCapacity < 0)
+        throw new IllegalArgumentException
+            ("initialCapacity is negative: " + initialCapacity);
+      manyItems = 0;
+      data = new int[initialCapacity];
+    }
+
+    public void add(int element)
+  {
+    if(manyItems == data.length)
+      ensureCapacity(manyItems*2+1);
+
+    data[manyItems] = element;
+    manyItems++;
+  }
+
+  public void addAll(IntArrayBag addend)
+  {
+    ensureCapacity(manyItems+ addend.manyItems);
+    System.arraycopy(addend.data, 0, data, manyItems, addend.manyItems);
+  }
+
+  public int countOccurences(int target) // 내가 원하는 target 원소가 몇개 있나 체크하는 메서드
+  {
+    int answer;
+    int index;
+
+    answer = 0;
+    for(index = 0; index<manyItems; index++)
+      if(target == data[index])
+        answer++;
+    return answer;
+  }
+
+  public boolean remove(int target)
+  {
+    int index;
+    index = 0;
+
+    while((index<manyItems) && (target != data[index]))  //인덱스와 타겟이 안 맞는한 끝까지 반복
+      index++;
+    if(index == manyItems)   //끝까지 오면
+      return false;
+    else  //remove할 target을 찾으면
+    {
+      manyItems--;
+      data[index] = data[manyItems];
+      return true;
+    }
+  }
+
+  public static IntArrayBag union(IntArrayBag b1, IntArrayBag b2)  // 서로 다른 배열 b1, b2를 합치는 메서드
+  {
+    IntArrayBag answer = new IntArrayBag(b1.getCapacity() + b2.getCapacity());
+        System.arraycopy(b1.data, 0, answer.data, 0, b1.manyItems);
+        System.arraycopy(b2.data, 0, answer.data, b1.manyItems,b2.manyItems);
+        answer.manyItems = b1.manyItems + b2.manyItems;
+
+        return answer;   //배열 객체를 리턴했다?
+  }
+
+  public Object clone()  
+  {
+    IntArrayBag answer;
+
+    try
+    {
+      answer =(IntArrayBag) super.clone();
+    }
+    catch (CloneNotSupportedException e)
+    {
+      throw new RuntimeException("THis class does not implement Cloneable");
+    }
+    answer.data = (int[]) data.clone();
+    return answer;
+  }
+
+  public void ensureCapacity(int minimumCapacity) { //파라매터의 용량만큼 배열의 크기를 늘려주는 메서드
+    int Array_now[];
+
+    if (data.length < minimumCapacity) {
+      Array_now = new int[minimumCapacity];    //늘려질 용량을 가진 새로운 배열 객체를 생성한다
+      System.arraycopy(data, 0, Array_now, 0, manyItems);
+      data = Array_now;   //새로운 배열 객체를 data로 대입한다. 배열 교체
+    }
+  }
+  public int getCapacity() {  //배열의 전체 길이를 보여주는 메서드
+    return data.length;
+  }
+
+  public int size() // 배열의 실제 길이를 보여주는 메서드(원소의 개수)
+  {
+    return manyItems;
+  }
+
+  public void trimTosize()
+  {
+    int trimmedArray[];
+    if(data.length != manyItems)
+    {
+      trimmedArray = new int[manyItems]; //실제 길이만큼의 크기만 가진 배열 객체 생성
+      System.arraycopy(data,0,trimmedArray,0,manyItems);
+      data = trimmedArray; //실제 길이만큼만 가진 배열을 data로 치환해준다.
+    }
+  }
+
+}
