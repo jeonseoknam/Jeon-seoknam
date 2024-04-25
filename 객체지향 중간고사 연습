@@ -187,7 +187,7 @@ public class main {
 
 
 
-// 빈 배열의 출력값
+// 빈 배열의 출력값(형변환은 안된다 배열은?)
 // 힙공간에 빈 배열이 0으로만 채워지는게 아니라, 각 배열의 자료형에 맞게 채워진다
 // byte, int, short -> 0
 // double, float -> 0.0
@@ -277,7 +277,194 @@ public class main {
     }
   }
 
+//2차원 ragged배열 for-each문으로 접근하는법
+public class main {
+  public static void main(String[] args) {
+    int[] a ={10,100};
+    int[] b ={20,200,2000,20000};
 
+    int[][] test = {a,b};
+    test[0] = a;
+    test[1] = b;
+
+    for(int[] innerArray : test) {
+      for (int c : innerArray) {
+        System.out.print(c + " ");
+      }
+      System.out.println();
+    }
+  }
+}
+
+
+//java의 call-by-value에 대한 문제.(중요)
+//print 메서드에서 일어난 a의 변경된 참조는, main메서드에는 영향을 주지 못한다. 즉 한 메서드 안에서 일어난 일은 다른 메서드에는 영향을 주지 못한다.
+public class main {
+  public static void main(String[] args) {
+
+    int x = 3;
+    A a = new A(); // 레퍼런스 변수가 a인 객체를 생성. 이때 객체의 멤버변수인 a는 0으로 초기화된다(힙영역에 저장되기 때문)
+    System.out.println(x);
+    x = 4;
+    a.a = 5;
+    System.out.println(a.a);
+    A.print(x, a); //x=4, a=5 ??
+
+    System.out.println(x); // y가 x를 가리키지 못한다. x는 primitive 변수이기 때문이다. y는 x의 값을 못바꿈.
+    System.out.println(a.a); //5가 아닌 7이 나온 이유를 그림으로 설명해보기
+  }
+
+}
+
+class A {
+  int a;
+
+  static void print(int y, A a) {
+    y += 1;
+    System.out.println(y);
+    a.a = y + 2;
+    System.out.println(a.a);
+    a = new A();   //클래스의 메서드 안에서 생성자를 또 만들 수 있다? ㅇㅇ -> 이때 새로운 객체를 생성하고 a가 0으로 초기화된다.
+    a.a = y;
+    System.out.println(a.a);
+  }
+}
+
+//기본 생성자에 대해 생각해보자(4장 21p)
+//생성자 이름은 클래스 이름과 반드시 동일해야하고, 리턴 타입을 지정할 수 없다. 따라서 A1()은 생성자가 아니다
+// 생성자가 없음에도 A1();이 오류가 안 나고 실행된 이유는 컴파일러가 자동으로 기본 생성자를 삽입했기 때문이다.
+// 그러나 기본 생성자는 아무런 동작을 하지 않기 때문에 출력값은 없다.
+//기본 생성자가 생기는 조건을 잘 생각하자. 클래스에 생성자가 "하나도" 없어야한다.
+
+public class main{
+  public static void main(String[] args)
+  {
+    new A1();
+  }
+}
+
+class A1{
+  void A1()
+  {
+    System.out.println("a");
+  }
+}
+
+
+//출력값이 있으면 쓰고 없으면 이유를 쓰시오
+//메서드 오버로딩 문제(4장 43p)
+//인자로 들어간 녀석과 더 적합한 메서드를 선택한다. int-> byte 형변환 안되는걸 명심. 형변환표 외웠나 체크
+//기본적으로 실수는 double이라 생각하자. float보다 double에 가깝다.
+
+public class main{
+  public static void main(String[] args) {
+    A1 a=new A1();
+    a.f(1, 2);
+    a.f(10000, 20000);
+    A2 b=new A2();
+    b.f(2.5, 10000);
+  }
+}
+class A1{
+  void f(double a, double b) {System.out.println("d d");} //오버로딩되면 해당하는 메서드로 자동 이동하는건가 변수가?
+  void f(byte a, byte b) {System.out.println("b b");}
+}
+
+class A2{
+  void f(double a, double b) {System.out.println("d d");}
+  void f(float a, int b) {System.out.println("f i");}
+}
+
+
+//과제에 비슷한 문제 있었다(3장 과제 4번)
+//char 유니코드 해석, charAt(0)의 의미, char형의 int형 형변환
+import java.util.Scanner;
+public class main{
+  public static void main(String[] args) {
+    char a1='\u0061'; // a1은 'a'를 의미
+    Scanner scanner =  new Scanner(System.in);
+    String temp=scanner.next();  //temp는 문자열을 받는 객체
+    char a2 = temp.charAt(0);  // a2는 temp의 첫번째 글자를 받는다
+    for(int i=a2;i>=a1;i--) {   //받아온 글자부터, a까지 돌린다. 이때 char형이 int로 형변환했다. a1도 int로 형변환
+      for(char j=a1;j<=i;j++) // a부터 i가 해당하는 문자까지 출력한다.
+        System.out.print(j + " ");
+      System.out.println();
+    }
+  }
+}
+
+//중첩된 try-catch에서 흐름 읽는법(예외처리 유형)
+//배열의 index에 식이 들어가도 된다. 0으로 나누거나 잘못된 인덱스에 접근하는게 안되는거다.'
+//오류가 난 문장이 아예 실행 안되는게 아니다. 오류나기 직전 상황까지는 코드가 다 돌아간다. ary[1], ary[2]는 돌아가는걸 놓치면 안된다.
+//내부 try에서 catch를 했으므로, 외부 try에서는 catch하지 않는다.
+public class main {
+
+  public static void main(String args[]){
+    String[] ary = {"A","B","C"};
+    int a=0,b=5;
+
+    try{
+      System.out.print(ary[a/5]);
+      try{
+        for(int i=1;i<4;++i)
+          System.out.print(ary[i]);
+      }
+      catch(Exception e){
+        System.out.println("D");
+      }
+      finally{
+        System.out.println("E");
+      }
+    }
+    catch(Exception e){
+      System.out.println("F");
+    }
+    finally{
+      System.out.println("G");
+    }
+
+  }
+}
+
+//String타입은 자바에서 불변이다. 만약에 어떤 메서드로 바꿔줬다면, 그 바뀐 객체를 임의의 변수에 할당해서 저장해줘야 한다
+public class main {
+  public static void main(String[] args) {
+
+    String a = "cook";
+    a.replace("c","k");
+    System.out.println(a);
+  }
+}
+
+
+//문자열과 +가 섞이면 무조건 문자열로 출력된다
+//주의해야 하는건, 문자열이 나오기 전까지의 시점은 숫자들끼리의 계산을 한다. 문자열이 나오면 그 뒤는 다 문자열 취급하고 붙인다.
+public class main {
+  public static void main(String[] args) {
+
+    System.out.println(12+23+"45");
+    System.out.println(1.0+2.0+3+"45");
+    System.out.println("44"+1+2.0);
+    System.out.println(1+2.0+"44");
+
+  }
+}
+
+//자바는 중괄호로 스코프를 생성할 수 있다
+//그래서 같은 메서드 또는 스코프 내부에서는 재정의를 할 수 없다.(이미 쓴 이름을 또 쓸 수 없다)
+public class main {
+
+  public static void main(String args[]){
+    int a = 10;
+    System.out.println(a);
+    {
+      int a = 20;
+      int b = 10;
+      
+    }
+    System.out.println(a);
+  }
+}
 
 
 
