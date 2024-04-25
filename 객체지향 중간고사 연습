@@ -485,3 +485,37 @@ tt.increase().increase().increase().show();
   }
 }
 
+
+
+//this를 활용한 코드.. PDF 예제
+public class Book {
+  String title;
+  String author;
+
+  void show()
+  {
+    System.out.println(title+" "+author);
+  }
+  public Book(){
+    this("","");
+    System.out.println("생성자가 호출되었음");
+  }
+  public Book(String title){
+    this(title, "작자미상");
+  }
+
+  public Book(String title, String author){
+    this.title = title;
+    this.author = author;
+  }
+
+  public static void main(String[] args)
+  {
+    Book littlePrince = new Book("어린왕자","생텍쥐페리");
+    Book loveStroy = new Book("춘향전");
+    System.out.println(littlePrince.title+littlePrince.author);
+    System.out.println(loveStroy.title + loveStroy.author);
+    loveStroy.show();
+    Book stroy = new Book();
+  }
+}
