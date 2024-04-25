@@ -18,3 +18,197 @@ public class main {
 }
 
 
+
+//일반 for문으로 ragged배열 요소 출력법(3장 32p)
+
+public class main {
+  public static void main(String[] args) {
+  int[] t1 = {10, 100};
+  int[] t2 = {20, 200, 2000, 20000};
+  int[][] test = {t1, t2}; // t1이 1행 배열, t2가 2행 배열이라 생각하면 될듯
+
+  for(int i = 0; i<test.length; i++)
+    for(int j = 0; j<test[i].length; j++)  //tset[i][].length 같은 문장은 없다. 배열의 행번호인 i를 넣어줘야 한다.
+      System.out.println(test[i][j]);
+
+  }
+}
+
+
+// 위 코드와 다르가 직접 할당해준 문장. test[0]가 t1을 참조, tset[1]이 t2를 참조한다.
+public class main {
+  public static void main(String[] args) {
+  int[] t1 = {10, 100};
+  int[] t2 = {20, 200, 2000, 20000};
+  int test[][];
+  test = new int[2][];
+  test[0] = t1;
+  test[1] = t2;
+
+  for(int i = 0; i<test.length; i++)
+    for(int j = 0; j<test[i].length; j++)
+      System.out.println(test[i][j]);
+
+  }
+}
+
+
+
+//동적할당으로 2차원 ragged배열 만들고 값 넣어주기. 위 코드들이랑 방식 같음
+public class main {
+  public static void main(String[] args) {
+
+  int test[][];
+  test = new int[2][];
+  test[0] = new int[3];
+  test[1] = new int[4];
+
+  for(int i = 0; i<test.length; i++)
+    for(int j = 0; j<test[i].length; j++) {
+      test[i][j] = 4;
+    }
+  for(int i = 0; i<test.length; i++)
+    for(int j = 0; j<test[i].length; j++)
+      System.out.println(test[i][j]);
+
+  }
+}
+
+
+//try-catch문에서 에러상황이 발생하기 전까지의 코드는 실행된다. B,C는 출력되어야한다. 
+//가장 큰 try문 안에서 예외가 났다면, 큰 try문도 catch를 한다. try-catch문도 나올
+
+public class main {
+  public static void main(String[] args) {
+    try{ 
+      String[] s = {"A", "B", "C"};
+      try{
+        for(int i = 1; i<5; i++)
+          System.out.println(s[i]);
+      }catch(ArithmeticException e){
+        System.out.println("D");
+      }
+      finally {
+        System.out.println("E");
+      }
+    }catch(Exception e){
+      System.out.println("F");
+    }finally{
+      System.out.println("G");
+    }
+  }
+
+}//안쪽 작은 try-catch문의 에러를 에러상황과 맞게 수정해줬다. 안쪽에서 catch가 일어나니까 바깥쪽 catch는 일어나지 않는다. 한번 잡으면 안 잡나보다
+
+public class main {
+  public static void main(String[] args) {
+    try{
+      String[] s = {"A", "B", "C"};
+      try{
+        for(int i = 1; i<5; i++)
+          System.out.println(s[i]);
+      }catch(ArrayIndexOutOfBoundsException e){
+        System.out.println("D");
+      }
+      finally {
+        System.out.println("E");
+      }
+
+    }catch(Exception e){
+      System.out.println("F");
+    }finally{
+      System.out.println("G");
+    }
+
+  }
+}
+
+
+//강제형변환 해야하는 것을 고르시오
+//byte의 표현범위: -128~127(256을 절반취하기)
+//컴파일러는 리터럴에서 '_'를 빼고 처리한다.(2장 20p)
+// 15_; 리터럴 끝 사용 불가
+// 3_.14; 소수점 앞 사용 불가
+// 12345_L; L, F(Float) 앞에 사용 불가
+// 0_X15; 0x의 중간이나 끝, 앞에 사용 불가
+// _로 리터럴 생략할때 맨 앞, 맨 끝에는 올 수 없다!!! _2000, 2000_ 이런거 안된다!!
+
+public class main {
+  public static void main(String[] args) {
+    short s1 = 0x7f_ff;  // 0x7fff;와 같다
+    byte b1 = 0x8f;
+    int i1 = 0xff_ff_ff_ff; // 0x로 시작하면 16진수
+    int i2 = 0xff_ff_ff_ffL; 0x_ffffffffL과 같다
+    long l1 = 0xff_ff_ff_ffL;
+
+  }
+}
+
+
+//swtich() 내부에 들어갈 수 있는 인자, case 조건 : 에서 조건에 들어갈 수 있는 인자 판단하기
+// case문의 조건값으로 가능한것 -> 문자(int), 정수(char), 문자열(String) 리터럴만 가능하다. boolean, double 같은거 오면 안된다. 변수 사용도 안된다
+// switch() 내부 값으로 가능한것 -> 보통 수식이 오는데, 수식 뿐만 아니라 int형이 커버 가능한 범위의 정수와 문자, String 까지는 올 수 있다. 
+// 주의할건 switch() 내부에 boolean이 오면 안된다. 조건식은 올 수 없다.
+// case의 값이 안 맞아도, break없이 위에서 실행되었다면 아래도 실행되는거 놓치면 안된다.
+
+public class main {
+  public static void main(String[] args) {
+    int a = 10, b=5;
+    switch (a%b) {
+      case 1 - 1:
+        System.out.println(0);
+      case 2 - 1:
+        System.out.println(1);
+    }
+    switch(a%b==0){
+      case 1:
+        System.out.println(true);
+      case 0:
+        System.out.println(false);
+    }
+
+  }
+}
+
+
+
+//컴파일 오류 나는지 판단하시오
+// 생성자는 반환형이 없다. 그냥 메서드와 생성자 구분하는법
+public class main {
+  void dd(){
+    System.out.println("DD");
+  }
+
+  public static void main(String[] args) {
+    new dd();
+    }
+
+  }
+
+
+
+// 빈 배열의 출력값
+// 힙공간에 빈 배열이 0으로만 채워지는게 아니라, 각 배열의 자료형에 맞게 채워진다
+// byte, int, short -> 0
+// double, float -> 0.0
+// Object -> null
+// String, char -> null
+// 근데 이상하게 char형 배열은 null이 아니라 아무것도 출력이 안된다. 왜일까? \0은 그냥 무출력인가?
+
+
+public class main {
+  public static void main(String[] args) {
+  
+    byte[] b = new byte[2];
+    int[] i = new int[2];
+    float[] f = new float[2];
+    Object[] o = new Object[2];
+    String[] s = new String[2];
+    char[] c = new char[2];
+ 
+    System.out.println(b[1]+","+i[1]+","+f[1]+","+o[1]+","+s[1]+","+c[1]);
+    }
+
+  }
+
+
