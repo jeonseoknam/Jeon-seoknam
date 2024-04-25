@@ -212,3 +212,73 @@ public class main {
   }
 
 
+//Integer.ParseInt()에서 내부의 값은 String이 되어야 한다
+//int a 같이 int형 정수형 뿐만 아니라 double, long에도 담아줄 수 있다. 기본형 타입의 형변환이 가능하기 때문이다. byte나 short같이 더 작은애로 바꿔주려면 강제형변환 해야된다.
+//String이나 char로 바꾸는건 당연히 컴파일에러 난다.
+public class main {
+  public static void main(String[] args) {
+
+    int a = Integer.parseInt("123");
+    }
+  }
+
+
+//String과 숫자가 붙으면, 다 String으로 묶어버린다.
+public class main {
+  public static void main(String[] args) {
+
+   String a = 1+23+"45";
+    }
+
+  }
+
+
+
+//대입연산자는 애초에 boolean식이 아니다.. ==이나 !=이 boolean이 결과로 나오는 것이다
+public class main {
+  public static void main(String[] args){
+   
+    boolean a = 1=2;
+    }
+
+  }
+
+
+//자바에서 boolean은 강제 캐스팅 불가능하다. 즉 true, flase로 직접 선언해야 한다. 참거짓을 강요하면 안된다
+public class main {
+  public static void main(String[] args) {
+
+    int a = 10;
+    int b = 5;
+    boolean d = a>b?(boolean)1:(boolean)0;
+
+    }
+  }
+
+
+
+
+//아래 두개는 되는 코드다.
+public class main {
+  public static void main(String[] args) {
+
+    boolean a = !((!true||true)&&false);
+    System.out.println(a);
+
+    }
+  }
+
+
+
+public class main {
+  public static void main(String[] args) {
+    boolean a = (1<2) == false;
+    System.out.println(a);
+    }
+  }
+
+
+
+
+
+
