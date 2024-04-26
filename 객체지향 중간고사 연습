@@ -678,6 +678,7 @@ public class main{
 }
 
 //문자열의 길이는 공백을 포함하여 센다
+//s1~s4를 저장해줘서 그렇지, proverb의 형태는 변하지 않는다.
 public class main{
   public static void main(String[] args){
 
@@ -699,4 +700,57 @@ public class main{
 }
 
 
+//아래 코드의 빈칸 1줄로 주어진 문자열을 역순으로 출력하는 코드를 작성해라
+public class main {
+  public static void main(String[] args) {
 
+    String s = "hello wrold";
+    String tmp = "";
+    for (int i = 0; i < s.length(); ++i) {
+      빈칸
+    }
+    System.out.println(tmp);
+  }
+}
+
+
+//static 멤버들이 오버로딩 되어있을때 어떻게 대처하는지 알아보는 코드
+class A{
+  static int a;
+  void ff() {
+    System.out.println("김태준");
+  }
+  static void tt(){
+      System.out.println("남광운");
+      a--;
+    }
+
+}
+
+class B extends A{
+  void ff(){
+    System.out.println("신정은");
+  }
+
+  void ff(int a){
+    System.out.println("오세환");
+  }
+
+  static void tt(){
+    System.out.println("이도현");
+    a++;
+  }
+}
+
+public class C{
+  public static void main(String[] args){
+    B b = new B();
+    b.ff(5);
+    A a = new B();
+    a.ff();
+    a.tt();
+    b.ff();
+    b.tt();
+    System.out.println(b.a);
+  }
+}
