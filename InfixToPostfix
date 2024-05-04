@@ -1,0 +1,136 @@
+import java.util.Stack;
+import java.util.Scanner;
+public class InfixToPostfix {
+
+  // 우선순위를 반환하는 메서드
+  static int precedence(char c) {
+    switch (c) {
+      case '+':
+      case '-':
+        return 1;
+      case '*':
+      case '/':
+        return 2;
+
+    }
+    return -1;
+  }
+
+  // 중위 표현을 후위 표현으로 변환하는 메서드
+  static String infixToPostfix(String infix) {
+    StringBuilder postfix = new StringBuilder();
+    Stack<Character> stack = new Stack<>();
+
+
+      for (int i = 0; i < infix.length(); i++) { //infix 표현식을 순회한다
+        char c = infix.charAt(i);
+
+
+        // 피연산자일 경우
+        if (Character.isLetterOrDigit(c) || c == '.')
+          postfix.append(c); //피연산자인 경우 postfix라는 문자열 객체에 넣어준다
+          // '('일 경우
+        else if (c == '(')
+          stack.push(c);  //열린괄호인 경우 stack에 push한다.
+          // ')'일 경우
+        else if (c == ')') {  //닫힌괄호인 경우
+          while (!stack.isEmpty() && stack.peek() != '(')
+            postfix.append(stack.pop());
+          stack.pop(); // '(' 제거
+        }
+        else if (c== ' ')
+        {
+          continue; //띄어쓰기
+        }
+        // 연산자일 경우
+        else {
+          while (!stack.isEmpty() && precedence(c) <= precedence(stack.peek())) //stack이 비어있지 않고, 연사자의 우선순위가 stack의 peek의 우선순위보다 작거나 같은 경우
+            postfix.append(stack.pop());
+          stack.push(c);
+        }
+      }
+
+
+
+    // 스택에 남은 연산자들을 후위 표기식에 추가
+    while (!stack.isEmpty())
+      postfix.append(stack.pop());
+
+    return postfix.toString();
+  }
+
+
+  static double evaluatePostfix(String postfix) {   //변환한 postfix를 계산하는 메서드
+    Stack<Double> stack = new Stack<>();
+
+    // 후위 표현식 순회
+    for (int i = 0; i < postfix.length(); i++) {
+      char c = postfix.charAt(i);
+
+      // 피연산자일 경우
+      if (Character.isDigit(c) || c == '.') {
+        stack.push((double) (c - '0'));
+      } else {
+        // 연산자일 경우
+        double operand2 = stack.pop();
+        double operand1 = stack.pop();
+        double result;
+        switch (c) {
+          case '+':
+            result = operand1 + operand2;
+            break;
+          case '-':
+            result = operand1 - operand2;
+            break;
+          case '*':
+            result = operand1 * operand2;
+            break;
+          case '/':
+            if(operand2 == 0){
+              throw new IllegalArgumentException("0으로 나눌 수 없습니다.");
+            }
+            result = operand1 / operand2;
+            break;
+          default:
+            throw new IllegalArgumentException("Invalid postfix expression");
+        }
+        stack.push(result);
+      }
+    }
+
+    // 스택에 남아 있는 결과 반환
+    return stack.pop();
+  }
+
+
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    while(true) {
+      System.out.println("======= MyCalculator ========");
+      System.out.println("MyCalculator 사용을 환영합니다." + "\n");
+
+      System.out.println("Infix로 수식을 입력하시오.<enter>");
+
+      String infixExpression = sc.next();
+
+      System.out.println("Postfix로 변환 : " + infixToPostfix(infixExpression));
+
+      System.out.println("계산을 시작할까요? (Y/N)");
+      char question_cal = sc.next().charAt(0);
+      if(question_cal == 'Y')
+        System.out.println(evaluatePostfix(infixToPostfix(infixExpression)));
+      else
+        break;
+
+      System.out.println("계속 하시겠습니까? (Y/N)");
+      char question = sc.next().charAt(0);
+      if(question == 'N') {
+        System.out.println("\n"+"사용해주셔서 감사합니다.");
+        System.out.println("프로그램을 종료합니다.");
+        break;
+      }
+      else if(question == 'Y')
+        continue;
+    }
+  }
+}
