@@ -239,3 +239,151 @@ public class MethodOverridingEx {
 
 
 
+//@override 사용. shape의 draw를 쓰고싶을땐 어떻게 해야되는지 해보기
+package 객체지향;
+
+import org.w3c.dom.css.Rect;
+
+import javax.sound.sampled.Line;
+import java.awt.*;
+
+class Shape{
+  protected String name;
+  public void paint(){
+    draw();
+  }
+
+  public void draw()
+  {
+    System.out.println("shape");
+  }
+}
+
+  class Circle extends Shape{
+    @Override
+    public void draw(){
+      System.out.println("Circle");
+    }
+  }
+
+public class MethodOverridingEx {
+  public static void main(String[] args)
+  {
+    Shape b = new Circle();
+    b.paint();
+  }
+}
+
+
+
+//오버라이딩 해놓고, 슈퍼클래스의 메서드를 쓰고 싶을때
+package 객체지향;
+
+import org.w3c.dom.css.Rect;
+
+import javax.sound.sampled.Line;
+import java.awt.*;
+
+class Shape{
+  protected String name;
+  public void paint(){
+    draw();
+  }
+
+  public void draw()
+  {
+    System.out.println(name);
+  }
+}
+
+  class Circle extends Shape{
+  protected String name;
+    @Override
+    public void draw(){
+      this.name = "Circle";
+      super.name = "shape";
+      super.draw();
+      System.out.println(this.name);
+    }
+  }
+
+public class MethodOverridingEx {
+  public static void main(String[] args)
+  {
+    Shape b = new Circle();
+    b.paint();
+  }
+}
+
+
+
+//접근지정자를 넓혀도 오버라이딩이 가능하다는 예제
+package 객체지향;
+
+class A{
+  protected void f(){
+    System.out.println("f다");
+  }
+}
+
+class B extends A{
+  public void f(){
+    System.out.println("B의 f다.");
+  }
+}
+public class OverrideErrorEx {
+  public static void main(String[] args)
+  {
+    A a = new B();
+    a.f();
+  }
+}
+
+
+//final 메서드를 오버라이딩 하려고 하면 컴파일에러가 난다
+package 객체지향;
+
+class A{
+  protected final void f(){
+    System.out.println("f다");
+  }
+}
+
+class B extends A{
+  public void f(){
+    System.out.println("B의 f다.");
+  }
+}
+public class OverrideErrorEx {
+  public static void main(String[] args)
+  {
+    A a = new B();
+    a.f();
+  }
+}
+
+
+//static 메서드는 오버라이딩이 되지 않는다. 하지만 다음 코드가 컴파일에러가 나지는 않는다. 그냥 정적바인딩으로 취급해서 A의 f(), B의 f() 따로 있는걸로 취급한다. @override를 쓰면 컴파일에러가 난다. A와 B의 f()써보기
+package 객체지향;
+
+class A{
+  protected static void f(){
+    System.out.println("f다");
+  }
+}
+
+class B extends A{
+  protected static void f(){
+    System.out.println("B의 f다.");
+  }
+}
+public class OverrideErrorEx {
+  public static void main(String[] args)
+  {
+    A a = new B();
+    a.f();
+  }
+}
+
+
+
