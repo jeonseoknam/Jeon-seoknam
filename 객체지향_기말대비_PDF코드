@@ -39,4 +39,203 @@ public class ColorPointEx {
 }
 
 
+//super()로 슈퍼클래스의 생성자 선택하는 예제
+package 객체지향;
+
+
+class Point{
+  private int x,y;
+  public Point(int x, int y)
+  {
+    this.x = x;
+    this.y = y;
+  }
+  public void showPoint(){
+    System.out.println("("+x+","+y+")");
+  }
+}
+
+class ColorPoint extends Point{
+  private String color;
+  public ColorPoint(int x, int y, String color){
+    super(x,y);
+    this.color = color;
+  }
+
+  public void showColorPoint(){
+    System.out.println(color);
+    showPoint();
+  }
+}
+public class ColorPointEx {
+  public static void main(String[] args)
+  {
+    ColorPoint cp = new ColorPoint(5,6,"blue");
+    cp.showColorPoint();
+  }
+}
+
+
+
+//업캐스팅 예제
+package 객체지향;
+
+class Person{
+  String name;
+  String id;
+  
+  public Person(String name){
+    this.name = name;
+  }
+}
+
+class Student extends Person{
+  String grade;
+  String department;
+  public Student(String name){
+    super(name);
+  }
+}
+public class UpcastingEx {
+  public static void main(String[] args)
+  {
+    Person p;
+    Student s = new Student("이재문");
+    p = s; //업캐스팅
+
+    System.out.println(p.name);
+    p.grade = "A";
+    p.department = "com"; // p는 sutdent를 가리키고 있지만 타입이 Person이므로 grade, department에 접근 불가.
+  }
+}
+
+
+//instanceof는 자신과 up, down 관계인 애들만 비교 가능하다는 예제. 그걸 어기면 컴파일에러
+package 객체지향;
+
+class Person{
+
+}
+
+class Student extends Person{
+
+}
+
+class Researcher extends Person{
+
+}
+
+class Circle{
+  
+}
+
+class Professor extends Researcher{
+
+}
+public class InstanceofEx {
+  public static void main(String[] args)
+  {
+    Person jee = new Student();
+    Person kim = new Professor();
+    Person lee = new Researcher();
+    Student jeon = new Student();
+    boolean a = jee instanceof Person;
+    boolean b = lee instanceof Circle;
+    boolean c = jeon instanceof Researcher;
+  }
+}
+
+
+
+//instanceof 활용사례. print()메서드 안에 new Student();처럼 생성자 호출이 파라매터로 들어가는 것도 봐두기
+package 객체지향;
+
+class Person{
+
+}
+
+class Student extends Person{
+
+}
+
+class Researcher extends Person {
+}
+
+class Professor extends Researcher{
+
+}
+public class InstanceofEx {
+  static void print(Person p) {
+    if (p instanceof Person)
+      System.out.print("Person ");
+
+    if (p instanceof Student)
+      System.out.print("Student ");
+
+    if(p instanceof Researcher)
+      System.out.print("Researcher ");
+    if (p instanceof Professor)
+      System.out.print("Professor ");
+
+    System.out.println();
+  }
+  public static void main(String[] args)
+  {
+    System.out.print("new Student() ->\t");
+    print(new Student());
+    System.out.print("new Researcher() ->\t");
+    print(new Researcher());
+    System.out.print("new Professor() ->\t");
+    print(new Professor());
+
+  }
+}
+
+
+
+//오버라이딩 활용 예제. circle에서 draw가 없으니 shape의 draw();가 실행되는 것도 봐보자
+package 객체지향;
+
+import java.awt.*;
+
+class Shape{
+  public Shape next; //이건뭐지?
+  public Shape(){next = null;}
+
+  public void draw(){
+    System.out.println("shape");
+  }
+}
+
+class Line extends Shape{
+  public void draw(){
+    System.out.println("Line");
+  }
+}
+
+class Rect extends Shape{
+  public void draw(){
+    System.out.println("Rect");
+  }
+}
+
+class Circle extends Shape{
+
+}
+public class MethodOverridingEx {
+  static void paint(Shape p){  //이 라인 덕분에 오버라이딩 실현된 것
+    p.draw();
+  }
+
+  public static void main(String[] args)
+  {
+    Line line = new Line();
+    paint(line);
+    paint(new Shape());
+    paint(new Rect());
+    paint(new Circle());
+  }
+}
+
+
 
