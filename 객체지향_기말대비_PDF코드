@@ -234,9 +234,13 @@ public class MethodOverridingEx {
     paint(new Shape());
     paint(new Rect());
     paint(new Circle());
+
+    Shape b = new Circle();
+    b = new Line();
+    b = new Rect(); //객체 레퍼런스 b가 가리키는 객체들을 계속 바꿔주는 것
+    paint(b); // b가 Rect를 가리키고 있는 상태에서 paint();
   }
 }
-
 
 
 //@override 사용. shape의 draw를 쓰고싶을땐 어떻게 해야되는지 해보기
