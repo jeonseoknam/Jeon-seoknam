@@ -387,3 +387,87 @@ public class OverrideErrorEx {
 
 
 
+
+//추상클래스 구현 연습(계산기)
+package 객체지향;
+
+abstract class Calculator {
+  public abstract int add(int a, int b);
+  public abstract int subtract(int a, int b);
+  public abstract double average(int[] a);
+}
+
+public class GoodCalc extends Calculator{
+  @Override
+  public double average(int[] a) {
+    double sum = 0;
+    for(int i =0; i<a.length; i++)
+      sum += a[i];
+    return sum/a.length;
+  }
+
+  @Override
+  public int add(int a, int b) {
+    return a+b;
+  }
+
+  @Override
+  public int subtract(int a, int b) {
+    return a-b;
+  }
+
+  public static void main(String[] args)
+  {
+    GoodCalc c = new GoodCalc();
+    System.out.println(c.add(2,3));
+    System.out.println(c.subtract(2,3));
+    System.out.println(c.average(new int[]{2,3,4}));
+  }
+}
+
+
+
+//인터페이스 사용 예제. SamsungPhone. 인터페이스가 약간 뼈대 느낌이고, 각 객체에 맞게 추상메서드들을 구현해서 실체화한다는 느낌인듯
+package 객체지향;
+
+
+
+interface PhoneInterface{
+  public static final int TIMEOUT = 10000;
+  public abstract void sendCall();
+  public abstract void receiveCall();
+  public default void printLogo(){ //디폴트 메소드인 것이지 이 메소드 접근지정자가 디폴트가 아님. public임
+    System.out.println("**Phone**");
+  };
+}
+
+class SamsungPhone implements PhoneInterface{
+  @Override
+  public void sendCall(){
+    System.out.println("띠리리리링");
+  }
+
+  @Override
+  public void receiveCall(){
+    System.out.println("전화가 왔습니다");
+  }
+
+  public void flash(){
+    System.out.println("전화기에 불이 켜졌습니다.");
+  }
+}
+
+public class InterfaceEx{
+  public static void main(String[] args)
+  {
+    SamsungPhone phone = new SamsungPhone();
+    phone.printLogo();
+    phone.sendCall();
+    phone.receiveCall();
+    phone.flash();
+  }
+}
+
+
+
+
