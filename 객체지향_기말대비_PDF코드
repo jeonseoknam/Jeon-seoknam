@@ -473,5 +473,34 @@ public class InterfaceEx{
 }
 
 
+//메소드의 재귀처럼 보이지만 오버라이딩이라 문제 없는 유형
+package 객체지향;
 
+class SuperObject{
+  public void paint(){
+    draw();
+  }
+  public void draw(){
+    draw();
+    System.out.println("Super Object");
+  }
+}
+
+class SubObject extends SuperObject{
+  @Override
+  public void paint(){
+    super.draw();
+  }
+  @Override
+  public void draw(){
+    System.out.println("Sub Object");
+  }
+}
+public class ExMain {
+  public static void main(String[] args)
+  {
+    SuperObject b = new SubObject();
+    b.paint();
+  }
+}
 
