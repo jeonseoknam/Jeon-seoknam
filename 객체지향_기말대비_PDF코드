@@ -504,3 +504,249 @@ public class ExMain {
   }
 }
 
+
+//interface default 메소드_인터페이스 내에서 구현부가 명시된 메소드를 사용할 수 있게 되었다.
+package 객체지향;
+
+interface Interface{
+  void method();
+  default void method2(){
+    System.out.println("method2() in Interface");
+  }
+}
+
+class Cls implements Interface{
+  @Override
+  public void method(){
+    System.out.println("method() in Cls");
+  }
+}
+
+public class InterfaceEx {
+  public static void main(String[] args)
+  {
+    Interface obj = new Cls();
+    obj.method();
+    obj.method2();
+    
+    
+    Cls obj2 = new Cls();
+    obj2.method();
+    obj2.method2();
+  }
+}
+
+
+//디폴트메소드의 오버라이드
+package 객체지향;
+
+interface Interface{
+  void method();
+  default void method2(){
+    System.out.println("method2() in Interface");
+  }
+}
+
+class Cls implements Interface{
+  @Override
+  public void method(){
+    System.out.println("method() in Cls");
+  }
+
+  @Override
+  public void method2(){
+    System.out.println("method2() in Cls");  //디폴트메소드도 오버라이드가 가능하다.
+  }
+}
+
+public class InterfaceEx {
+  public static void main(String[] args)
+  {
+    Cls obj2 = new Cls();
+    obj2.method();
+    obj2.method2();
+
+    Interface obj = new Cls();
+    obj.method();
+    obj.method2();
+
+  }
+}
+
+
+
+//인터페이스의 메소드를 사용하기 위한 super
+package 객체지향;
+
+interface Interface22{
+  void method();
+  default void method2(){
+    System.out.println("method2() in Interface");
+  }
+}
+
+class Cls implements Interface22{
+  @Override
+  public void method(){
+    System.out.println("method() in Cls");
+  }
+
+  @Override
+  public void method2(){
+    Interface22.super.method2();     //인터페이스에 있는 default메소드를 쓰고싶으면 인터페이스이름.super.메소드이름
+    System.out.println("method2() in Cls");
+  }
+}
+
+public class InterfaceEx {
+  public static void main(String[] args)
+  {
+    Cls obj = new Cls();
+    obj.method();
+    obj.method2();
+
+    Interface22 obj2 = new Cls();
+    obj2.method();
+    obj2.method2();
+
+  }
+}
+
+
+
+//interface를 구현한 class에서 어디까지 쓸 수 있는가
+package 객체지향;
+
+interface Interface{
+  void method();
+  default void method2(){
+    System.out.println("method2() in Interface");
+  }
+}
+
+interface SubInterface extends Interface{
+  void method();
+  @Override
+  default void method2()
+  {
+    System.out.println("method2() in SubInterface");
+  }
+}
+class Cls implements SubInterface{
+  @Override
+  public void method(){
+    method2();  //일종의 상속받은 느낌? SubInterface에 구현된 default메소드라 쓸 수 있다
+    System.out.println("method() in Cls");
+  }
+
+}
+
+public class InterfaceEx {
+  public static void main(String[] args)
+  {
+    Cls obj = new Cls();
+    obj.method();
+    obj.method2();
+
+    SubInterface obj2 = new Cls();
+    obj2.method();
+    obj2.method2();
+
+    Interface obj3 = new Cls();
+    obj3.method();
+    obj3.method2();
+  }
+}
+
+
+
+
+
+
+
+//인터페이스의 디폴트메소드와 클래스의 메소드 이름이나 인자가 같아 충돌 할 것 같을때 결과
+package 객체지향;
+
+interface Interface{
+  void method();
+  default void method2(){
+    System.out.println("method2() in Interface");
+  }
+}
+class SuperCls{
+  public void method2(){   //인터페이스의 디폴트 메소드도 method2()로, 이름이 같다. 충돌? ㄴㄴ. class의 메소드가 실행된다
+    System.out.println("method2() in SuperCls");
+  }
+}
+
+class Cls extends SuperCls implements Interface{
+  @Override
+  public void method(){
+    System.out.println("method() in Cls");
+  }
+}
+
+
+
+
+public class InterfaceEx {
+  public static void main(String[] args)
+  {
+  Cls obj = new Cls();
+  obj.method();
+  obj.method2();
+
+  Interface obj2 = new Cls();
+  obj2.method();
+  obj.method2();
+  }
+}
+
+
+
+
+
+
+//내부 파라매터가 달라지면 당연히 Interface의 메소드가 실행된다
+package 객체지향;
+
+interface Interface{
+  void method();
+  default void method2(){
+    System.out.println("method2() in Interface");
+  }
+}
+class SuperCls{
+  public int method2(int x){   //인터페이스의 디폴트 메소드도 method2()로, 이름이 같다. 충돌? ㄴㄴ. class의 메소드가 실행된다
+    System.out.println("method2() in SuperCls");
+    return x;
+  }
+}
+
+class Cls extends SuperCls implements Interface{
+  @Override
+  public void method(){
+    System.out.println("method() in Cls");
+  }
+}
+
+
+
+
+public class InterfaceEx {
+  public static void main(String[] args)
+  {
+  Cls obj = new Cls();
+  obj.method();
+  obj.method2();
+
+  Interface obj2 = new Cls();
+  obj2.method();
+  obj.method2();
+  }
+}
+
+
+
+
+
