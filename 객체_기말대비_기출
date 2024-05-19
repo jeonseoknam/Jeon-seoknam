@@ -1,0 +1,97 @@
+//상속 관계에서 super 사용
+//this.p = p 등 메소드의 인자로 들어오는 레퍼런스 변수 어떻게 처리해야 하는지 알아보기
+
+package 객체지향;
+
+public class InheritanceTest {
+  public static void main(String[] args)
+  {
+  FirstChild fc = new FirstChild();
+    System.out.println(fc.read());
+
+    SecondChild sc = new SecondChild();
+    System.out.println(sc.read());
+
+    ThirdChild tc1 = new ThirdChild(fc);
+    System.out.println(tc1.read());
+
+
+  }
+}
+
+
+class Parent{
+  public String read(){
+    return "P";
+  }
+}
+
+class FirstChild extends Parent{
+  public String read(){
+    return super.read() + "1";
+  }
+}
+
+class SecondChild extends Parent{
+  public String read(){
+    return super.read() + "2";
+  }
+}
+
+class ThirdChild extends Parent {
+  Parent p;
+
+
+  public ThirdChild(Parent p) {
+    this.p = p;
+  }
+
+  public String read(){
+    return p.read() + "3";
+  }
+}
+
+
+
+//오버라이딩은 메소드만 있다. 멤버 변수는 레퍼런스 변수의 타입을 따라간다.
+package 객체지향;
+
+class Parent{
+  int i = 10;
+  public int get(){
+    return i;
+  }
+}
+
+
+class Child extends Parent{
+  int i = 8;
+  public int get(){
+    return i;
+  }
+}
+
+public class ChildTest{
+  public static void print(Parent p){
+    System.out.println(p.i);
+    System.out.println(p.get());
+  }
+
+  public static void main(String[] args)
+  {
+    Parent p = new Parent();
+    System.out.println(p.i);
+    System.out.println(p.get());
+
+    Child c = new Child();
+    System.out.println(c.i);
+    System.out.println(c.get());
+
+    Parent p2 = new Child();
+    System.out.println(p2.i);
+    System.out.println(p2.get());
+
+    print(c);
+    print(p2);
+  }
+}
