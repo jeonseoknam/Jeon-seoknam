@@ -29,3 +29,83 @@ public class test1 {
 }
 
 
+
+//생성하려는 객체의 클래스 내부에 생성자 호출 코드가 있을때, 다 호출하고 마지막에 객체를 호출한다. 이때 클래스 안에 초기화 블록이 있으면, 초기화블록도 먼저 실행하고 객체를 생성한다.
+package 객체지향;
+
+public class Mugs{
+  Mug mug1 = new Mug(99);
+  Mug mug2;  //레퍼런스만 선언한 것
+  {
+    mug1 = new Mug(1);
+    mug2 = new Mug(2);
+    System.out.println("mug1&mug2 initialized");
+  }
+  Mugs(){
+    System.out.println("Mugs()");
+  }
+  Mugs(int i){
+    System.out.println("Mugs(int)");
+  }
+
+  public static void main(String args[])
+  {
+    System.out.println("Inside main()");
+    new Mugs();
+    System.out.println("new Mugs() completed");
+    new Mugs(1);
+    System.out.println("new Mugs(1) completed");
+  }
+}
+
+class Mug{
+  Mug(int marker){
+    System.out.println("Mug("+marker+")");
+  }
+  void f(int marker){
+    System.out.println("f("+marker+")");
+  }
+}
+
+
+//인터페이스, 추상클래스가 섞여있을때 super를 사용하는 법을 묻는 문제. 인터페이스 내부의 static메소드는 I4.f();로 접근. 인터페이스의 default메소드는 I2.super.f();로 접근한다. 
+//상속하는 바로 위 클래스의 f()를 실행하려면 super.f(); 하자
+package 객체지향;
+
+interface I1 extends I2{void f();}
+interface I2 {default void f() {System.out.println("f() in I2");}}
+interface I3{void f();}
+interface I4{static void f(){System.out.println("f() in I4");}}
+abstract class AC1{void f(){
+  System.out.println("f() in AC");
+}}
+
+abstract class AC2{abstract void f();}
+
+class C1 extends AC1 implements I1, I3, I4{
+  public void f(){
+   super.f();
+    System.out.println("f() in C");
+  }
+}
+
+class C2 extends AC2 implements I2, I3, I4{
+  public void f(){
+    I2.super.f(); //default메소드는 상위인 인터페이스에 있으므로 인터페이스명.super.메소드명으로 접근
+    I4.f(); //인터페이스 내부의 static 메소드는 super로 접근하는게 아니라 그냥 인터페이스명.메소드명 static은 this, super 사용 불가!
+    System.out.println("f() in C");
+  }
+}
+
+public class InterfaceTest{
+  public static void main(String[] args)
+  {
+    I2 object1 = new C1();
+    object1.f();
+
+    I3 object2 = new C2();
+    object2.f();
+  }
+}
+
+
