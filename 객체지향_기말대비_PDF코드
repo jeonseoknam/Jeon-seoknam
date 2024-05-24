@@ -873,3 +873,14 @@ class Rect {
     
   }
   }
+
+
+//Wrapper클래스
+public  class Test{
+  public static void main(String[] args)
+  {
+    Integer i = Integer.valueOf("3.14"); //안 맞는 자료형으로 Wrapper객체를 생성하려고 하면 NumberFormatException이 뜬다. 즉 강제캐스팅을 안해줘서 뜨는 것 같다.
+    Double i = Double.valueOf("3"); //강제캐스팅(묵시적캐스팅)되는건 에러가 뜨지 않는다.
+    System.out.println(i);
+  }
+}
