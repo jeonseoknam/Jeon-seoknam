@@ -884,3 +884,21 @@ public  class Test{
     System.out.println(i);
   }
 }
+
+
+
+//compareTO사용
+public  class WrapperEx{
+  public static void main(String[] args) {
+  String java = "Java";
+  String cpp = "C++";
+  int res = java.compareTo(cpp);
+  if(res==0)
+    System.out.println("the same");
+  else if(res<0)
+    System.out.println(java+" < "+cpp);
+  else
+    System.out.println(java+" > "+cpp); //Java > C++이라는건 Java가 C++보다 나중에 사전에서 나온다는 뜻
+
+  }
+}
