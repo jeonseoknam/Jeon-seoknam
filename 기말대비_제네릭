@@ -1,0 +1,35 @@
+//제네릭 메소드의 활용(장점) -> 같은 <K,V> 제약을 걸어버린다.
+class Util{
+  public static <K,V> boolean compare(Pair<K, V> p1, Pair<K, V> p2)
+  {
+    return p1.getKey().equals(p2.getKey())&&p1.getValue().equals(p2.getValue());
+  }
+}
+
+public class GenericEx{
+  public static void main(String[] args)
+  {
+    Pair<Integer, String> p1 = new Pair<>(1,"apple");
+    Pair<Integer, String > p2 = new Pair<>(2,"pear");
+    Pair<Integer, String> p3 = new Pair(1,"apple");
+    Pair<String, Integer> p4 = new Pair("hi",1);
+    boolean same1 = Util.compare(p1,p3);
+    boolean same2 = Util.compare(p1, p4);  //p1과 p4의 타입 순서쌍이 다르므로 컴파일 에러(제네릭 메서드로 제약을 걸어둔 것)
+    System.out.println(same1);
+  }
+}
+
+class Pair<K,V>{
+  private K key;
+  private V value;
+
+  public Pair(K key, V value){
+    this.key = key;
+    this.value = value;
+  }
+
+  public void setKey(K key){this.key = key;}
+  public void setValue(V value){this.value = value;}
+  public K getKey(){return key;}
+  public V getValue(){return value;}
+}
