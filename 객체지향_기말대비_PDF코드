@@ -39,8 +39,37 @@ public class ColorPointEx {
 }
 
 
+//서브 클래스의 생성자만 호출해도, 슈퍼클래스들의 생성자 또한 호출되고 실행된다
+//서브 클래스의 객체를 생성할때 당연히 상속받아야할 상위 클래스의 메서드, 필드를 가져야 되기 때문이다.
+public class ColorPointEx {
+  public static void main(String[] args){
+    C c;
+    c = new C();
+  }
+}
+
+class A{
+  public A(){
+    System.out.println("생성자 A");
+  }
+}
+
+class B extends A{
+  public B(){
+    System.out.println("생성자 B");
+  }
+}
+
+class C extends B{
+  public C(){
+    System.out.println("생성자 C");
+  }
+}
+
+
+
 //super()로 슈퍼클래스의 생성자 선택하는 예제
-package 객체지향;
+
 
 
 class Point{
@@ -49,6 +78,11 @@ class Point{
   {
     this.x = x;
     this.y = y;
+    System.out.println("인자 2개짜리 생성자");
+  }
+
+  public Point(){
+    System.out.println("생성자 Point");
   }
   public void showPoint(){
     System.out.println("("+x+","+y+")");
@@ -111,10 +145,10 @@ public class UpcastingEx {
 
 
 //instanceof는 자신과 up, down 관계인 애들만 비교 가능하다는 예제. 그걸 어기면 컴파일에러
-package 객체지향;
+
 
 class Person{
-
+    int grade=2;
 }
 
 class Student extends Person{
@@ -126,7 +160,7 @@ class Researcher extends Person{
 }
 
 class Circle{
-  
+
 }
 
 class Professor extends Researcher{
@@ -140,8 +174,17 @@ public class InstanceofEx {
     Person lee = new Researcher();
     Student jeon = new Student();
     boolean a = jee instanceof Person;
-    boolean b = lee instanceof Circle;
-    boolean c = jeon instanceof Researcher;
+   // boolean b = lee instanceof Circle;
+    //boolean c = jeon instanceof Researcher;  //자신과 up, down인 상속관계와의 비교가 아니기 때문에 컴파일에러가 난다.
+    System.out.println(a);
+   // System.out.println(b);
+   //System.out.println(c);
+    
+    if(jee instanceof Student park)
+    {
+      jee.grade = 4;
+    }
+      
   }
 }
 
@@ -386,6 +429,34 @@ public class OverrideErrorEx {
   {
     A a = new B();
     a.f();
+    B.f();
+  }
+}
+
+
+//private도 오버라이딩 안된다. 그냥 독립적인 클래스의 메소드로 존재하게 된다
+class A{
+  private void f(){
+
+    System.out.println("f다");
+  }
+
+  void print(){
+    this.f();
+  }
+}
+
+class B extends A{
+  private void f(){
+    System.out.println("B의 f다.");
+  }
+}
+public class OverrideErrorEx {
+  public static void main(String[] args)
+  {
+    A a = new B();
+    a.print();
+
   }
 }
 
