@@ -19,3 +19,50 @@ public class GetMessageEx {
 }
 
 
+//익셉션의 다형성
+import java.io.FileReader;
+import java.io.IOException;
+
+public class ExceptionParamEX1{
+  public static void main(String[] args)
+  {
+    try{
+      FileReader reader = new FileReader("some.txt");
+      reader.close();
+    }
+    catch(IOException e){
+      String str = e.getMessage();
+      e.printStackTrace();
+      System.err.println(str);
+    }
+  }
+}
+
+
+
+//내가 Exception을 만들고 싶으면, 예외 이름으로 된 클래스를 만들고 옆에 extends Exception 해주면 된다. 
+public class InvalidInputException extends Exception{
+  public InvalidInputException(){
+    super("잘못된 입력입니다.");
+  }
+
+  public static void main(String[] args)
+  {
+    try{
+      int result = subtract(5,100);
+      System.out.println(result);
+    }
+    catch(InvalidInputException e){
+      System.err.println(e.getMessage());
+    }
+  }
+
+  static int subtract(int a, int b) throws InvalidInputException{
+    if(a<b)
+      throw new InvalidInputException();
+    return a-b;
+  }
+}
+
+
+
