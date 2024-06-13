@@ -32,3 +32,155 @@ class Point{
     return super.clone();
   }
 }
+
+
+
+
+//깊은 복사 예시
+public class CloningEx {
+  public static void main(String[] args){
+    try{
+      Circle c1 = new Circle(new Point(3,4), 2);
+      System.out.println(c1);
+
+      Circle c2 = (Circle)c1.clone();
+      System.out.println(c2);
+
+      c2.setCenter(30,40); // 레퍼런스 타입은 얕은복사하면 원본도 바뀌어버린다?!
+      c2.setRadius(20);  //primitive 타입은 얕은복사해도 문제 X
+
+      System.out.println(c1);
+      System.out.println(c2);
+
+    }
+    catch(CloneNotSupportedException e){
+      e.printStackTrace();
+    }
+  }
+}
+
+class Point implements Cloneable{
+  int x, y;
+
+  public Point(int x, int y)
+  {
+    this.x = x; this.y = y;
+  }
+
+  @Override
+  public String toString(){
+    return "Point("+x+","+y+")";
+  }
+
+  @Override
+  public Object clone() throws CloneNotSupportedException{
+    return super.clone();
+  }
+}
+
+class Circle implements Cloneable{
+
+  Point center;
+  int radius;
+
+  Circle(Point center, int radius){
+    this.center = center;
+    this.radius = radius;
+    System.out.println("안녕하세요");
+  }
+
+  void setCenter(int x, int y){center.x =x; center.y=y;}
+  void setRadius(int radius){this.radius = radius;}
+
+  @Override
+  public String toString(){
+    return "Circle(center="+center+"radius="+radius+")";
+  }
+
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    Circle c = (Circle)super.clone();
+    c.center = (Point)center.clone(); //문제가 있는 center까지 복사한다. Circle 안에 있는 center를 복사한다..라..
+    return c;
+  }
+}
+
+
+
+//복사할때 강제캐스팅 귀찮게 계속 할 필요 없도록 clone()의 리턴타입을 해당 클래스 타입으로 바꿔준다.
+//공변수 사용한 것이다.
+
+public class CloningEx {
+  public static void main(String[] args){
+    try{
+      Circle c1 = new Circle(new Point(3,4), 2);
+      System.out.println(c1);
+
+      Circle c2 = c1.clone();
+      System.out.println(c2);
+
+      c2.setCenter(30,40); // 레퍼런스 타입은 얕은복사하면 원본도 바뀌어버린다?!
+      c2.setRadius(20);  //primitive 타입은 얕은복사해도 문제 X
+
+      System.out.println(c1);
+      System.out.println(c2);
+
+    }
+    catch(CloneNotSupportedException e){
+      e.printStackTrace();
+    }
+  }
+}
+
+class Point implements Cloneable{
+  int x, y;
+
+  public Point(int x, int y)
+  {
+    this.x = x; this.y = y;
+  }
+
+  @Override
+  public String toString(){
+    return "Point("+x+","+y+")";
+  }
+
+  @Override
+  public Object clone() throws CloneNotSupportedException{
+    return super.clone();
+  }
+}
+
+class Circle implements Cloneable{
+
+  Point center;
+  int radius;
+
+  Circle(Point center, int radius){
+    this.center = center;
+    this.radius = radius;
+    System.out.println("안녕하세요");
+  }
+
+  void setCenter(int x, int y){center.x =x; center.y=y;}
+  void setRadius(int radius){this.radius = radius;}
+
+  @Override
+  public String toString(){
+    return "Circle(center="+center+"radius="+radius+")";
+  }
+
+  @Override
+  public Circle clone() throws CloneNotSupportedException {   
+    //Circle에 있는 clone()메소드의 리턴타입을 Circle로 바꿔줬다. 그러면 복사할때 강제캐스팅 할 필요 없다.
+    //공변수 사용(covariant)
+    
+    Circle c = (Circle)super.clone();
+    c.center = (Point)center.clone(); //문제가 있는 center까지 복사한다. Circle 안에 있는 center를 복사한다..라..
+    return c;
+  }
+}
+
+
+
+
