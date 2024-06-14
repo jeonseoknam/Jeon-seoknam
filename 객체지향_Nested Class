@@ -37,3 +37,223 @@ class OuterClass{
     static void staticMethod(){}
   }
 }
+
+
+
+//Inner와 Outer의 구분 접근
+class OuterClass{
+  static int staticField;
+  int instanceField;
+  
+  static void staticMethod(){}
+  void instanceMethod(){}
+  
+  class InnerClass{
+    int instanceField;
+    
+    void instanceMethod(){}
+    
+    void method(){
+      staticField = 1;
+      instanceField = 1; //innerclass 내부 필드
+      OuterClass.this.instanceField = 1; // OuterClass에 있는 필드(inner의 외부)
+      staticMethod();
+      instanceMethod();
+      OuterClass.this.instanceMethod();
+    }
+  }
+  
+}
+
+
+
+//local class에서 외부의 필드, 메소드에 접근하는 방법
+
+public class NestedClassTest {
+  public static void main(String[] args)
+  {
+    AClass a = new AClass();
+    AClass.staticMethod();
+    // LocalClass.staticMethod(); 다른 클래스에선 LocalClass 접근 불허
+  }
+}
+
+class AClass {
+  static int staticField;
+  int instanceField;
+
+
+  static void staticMethod(){
+    System.out.println("staticmethod in Aclass");
+  }
+  void instanceMethod(){}
+  void method() {
+    class LocalClass {
+      static void staticMethod(){
+        System.out.println("staticMethod in LocalClass");
+      }
+      int instanceField;
+      void instanceMethod(){}
+      void method(){
+        staticField = 1;
+        instanceField = 1; //내부의 instanceField를 쓴 것
+        AClass.this.instanceField = 1; //외부 AClass의 instanceField를 쓴 것
+        instanceMethod();
+        AClass.this.instanceMethod();
+        staticMethod();         //LocalClass의 static 메소드 접근
+        AClass.staticMethod(); //AClass의 static메소드 접근
+
+      }
+
+    }
+  }
+}
+
+
+
+
+    // 만약 다른 클래스에서 쓰고 싶다면, 그걸 감싸는 AClass에서 LocalClass의 메소드를 호출하는 메소드를 만들면 된다
+    // 내가 하고싶은거: 다른 클래스의 local 클래스에 있는 메소드를 사용하기: local클래스의 목적에 안 맞음.
+    // A 안에서만 local클래스를 사용하는게 목적임.
+public class NestedClassTest {
+  public static void main(String[] args)
+  {
+    AClass a = new AClass();
+    AClass.staticMethod();
+    // LocalClass.staticMethod(); 다른 클래스에선 LocalClass 접근 불허.
+    
+  }
+}
+
+class AClass {
+  static int staticField;
+  int instanceField;
+
+
+  static void staticMethod(){
+    System.out.println("staticmethod in Aclass");
+  }
+  void instanceMethod(){}
+  void method() {
+    class LocalClass {
+      static void staticMethod(){
+        System.out.println("staticMethod in LocalClass");
+      }
+      int instanceField;
+      void instanceMethod(){}
+      void method(){
+        staticField = 1;
+        instanceField = 1; //내부의 instanceField를 쓴 것
+        AClass.this.instanceField = 1; //외부 AClass의 instanceField를 쓴 것
+        instanceMethod();
+        AClass.this.instanceMethod();
+        staticMethod();         //LocalClass의 static 메소드 접근
+        AClass.staticMethod(); //AClass의 static메소드 접근
+
+      }
+      }
+    LocalClass local = new LocalClass();
+    local.method();
+    }
+    
+    LocalClass local = new LocalClass();
+    local.method();
+
+
+
+  }
+}
+
+
+
+//local class에 들어갈 수 있는 필
+class AClass{
+  void method(final int arg){
+    int localVariable = 0;
+    int arg2;
+    class LocalClass{
+      void method(){
+        int a = arg;
+        int b = localVariable;
+        //int c = arg2; //초기화 안 된 녀석도 상수같은 효과를 내는게 아니니까 안된다
+        //localVariable = 1;
+        //arg = 1;
+        int d = test; //LocalCLass에서 쓰려는 지역변수는 먼저 생성되어 있었어야 한다. 즉 위에 test가 선언되어야 한다
+      }
+    }
+    int test = 1;
+  }
+}
+
+
+//LocalClass의 메소드 리턴타입은 상위 타입으로 해줘야 한다. 안그러면 컴파일 에러(LocalClass를 반환할 수는 없다)
+interface AnInterface{
+  public void method();
+}
+
+class AClass{
+  AnInterface method(){ //리턴타입이 상위 인터페이스이다
+    class LocalClass implements AnInterface{
+      public void method(){
+        System.out.println("method in LocalClass");
+      }
+    }
+    return new LocalClass(); //LocalClass 객체를 리턴한 것.
+  }
+
+
+  public static void main(String[] args)
+  {
+    AClass a = new AClass();
+    //AnInterface obj = new AClass(); AnInterface를 구현한건 AClass가 아니라 그 내부의 localClass이기 때문에
+    //위 문장은 컴파일에러다
+    AnInterface obj = a.method();
+    obj.method();
+  }
+}
+
+
+//Anonymous class 예시
+public class AnonymousEx {
+  private static void print(SuperClass obj){obj.method();}
+
+  public static void main(String[] args){
+    print(new SuperClass(){
+      @Override
+    void method(){System.out.println("method in Anonymous Class");}});
+
+    }
+  }
+
+
+
+class SuperClass{
+  void method(){
+    System.out.println("method in SuperClass");
+  }
+}
+
+
+
+//익명클래스로 바꿔보기
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class AnonymousEx {
+  public static void main(String[] args){
+    Button b = new Button("Start");
+    b.addActionListener(new EventHandler());
+    
+  }
+}
+
+
+
+
+class EventHandler implements ActionListener{
+  public void actionPerformed(ActionEvent e){
+    System.out.println("ActionEvent occured!!");
+  }
+}
+
