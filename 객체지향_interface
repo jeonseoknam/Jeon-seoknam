@@ -1,0 +1,96 @@
+//슈퍼 인터페이스의 default 메소들르 쓰는법
+//Interface.super.newDefaultMethod();
+
+interface Interface{
+  void method();
+  default void newDefaultMethod(){
+    System.out.println("newDefaultMethod in Interface");
+  }
+}
+
+class Cls implements Interface{
+  @Override
+  public void method(){
+    System.out.println("method() in Cls");
+  }
+  @Override
+  public void newDefaultMethod(){
+    Interface.super.newDefaultMethod();
+    System.out.println("newDefault in Cls");
+  }
+}
+
+public class InterfaceEx{
+  public static void main(String[] args){
+    Cls obj = new Cls();
+    obj.method();
+    obj.newDefaultMethod();
+  }
+}
+
+
+//직접 implements한 인터페이스의 메소드만 "인터페이스.super.메소드"로 접근 가능하다
+interface Interface{
+  void method();
+  default void newDefaultMethod(){
+    System.out.println("newDefaultMethod in Interface");
+  }
+}
+
+interface SubInterface extends Interface{
+  void method();
+  @Override
+  default void newDefaultMethod(){
+    System.out.println("newDefaultMethod() in SubInterfcae");
+  }
+}
+
+class Cls implements SubInterface{
+  @Override
+  public void method(){
+    Interface.super.newDefaultMethod();
+    System.out.println("method() in Cls");
+  }
+  
+}
+
+public class InterfaceEx{
+  public static void main(String[] args){
+    Cls obj = new Cls();
+    obj.method();
+    obj.newDefaultMethod();
+
+  }
+}
+
+
+//인터페이스 다중 구현을 할때, 메소드의 이름들이 겹치는 것들 중 default 메소드가 있다면, 구현하는 클래스에서 무조건 오버라이드 해야된다
+//안 그러면 컴파일 에러
+interface Interface{
+  void method();
+  default void newDefaultMethod(){
+    System.out.println("newDefaultMethod in Interface");
+  }
+}
+
+interface AnotherInterface{
+  void newDefaultMethod();
+}
+class Cls implements Interface, AnotherInterface{
+  @Override
+  public void method(){
+    System.out.println("method() in Cls");
+  }
+
+}
+
+public class InterfaceEx{
+  public static void main(String[] args){
+    Cls obj = new Cls();
+    obj.method();
+    obj.newDefaultMethod();
+
+  }
+}
+
+
