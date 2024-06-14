@@ -1,0 +1,39 @@
+//기본예시
+public class NestedClassTest {
+  public static void main(String[] args){
+    OuterClass oc = new OuterClass(); // 기본생성자
+    OuterClass.InnerClass ic = oc.new InnerClass(); //outerclass 내부에 있는 innerclass를 생성하겠다는 뜻인듯
+    ic.nonStaticfield =1;
+    ic.nonStaticMethod();
+    OuterClass.InnerClass.staticField = 1;
+    OuterClass.InnerClass.staticMethod();
+    ic.staticField = 1; //2줄 위에랑 같은문장 아닌가?
+    ic.staticMethod();
+
+    OuterClass.StaticNestedClass snc = new OuterClass.StaticNestedClass(); // OuterClass 안에 있는 StaticNestedClass 생성?
+    snc.nonStaticField = 1;
+    snc.nonStaticMethod();
+    OuterClass.StaticNestedClass.staticField = 1;
+    OuterClass.StaticNestedClass.staticMethod();
+    snc.staticField = 1;
+    snc.staticMethod();
+  }
+}
+
+class OuterClass{
+  class InnerClass{
+    int nonStaticfield;
+    static int staticField;
+    InnerClass(){}
+    void nonStaticMethod(){}
+    static void staticMethod(){}
+  }
+
+  static class StaticNestedClass{
+    int nonStaticField;
+    static int staticField;
+    StaticNestedClass(){}
+    void nonStaticMethod(){}
+    static void staticMethod(){}
+  }
+}
