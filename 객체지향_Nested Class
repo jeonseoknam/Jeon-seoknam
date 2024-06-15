@@ -234,6 +234,28 @@ class SuperClass{
 }
 
 
+//익명클래스로 인터페이스 구현
+import 객체지향.Interface;
+
+interface AnInterface{
+  public void method();
+}
+
+class AClass{
+private static void print(AnInterface obj){obj.method();}
+
+  public static void main(String[] args){
+  print(new AnInterface(){
+    @Override
+    public void method(){
+      System.out.println("익명클래스 안에 있는 메소드야 ㅎ");
+    }
+  });
+  }
+}
+
+
+
 
 //익명클래스로 바꿔보기
 import java.awt.*;
